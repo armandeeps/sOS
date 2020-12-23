@@ -1,0 +1,73 @@
+~~~
+
+Checkpoint 1
+
+	Bug 1: In init_paging(), we did not set the global bit for the kernel directory entry to 1, but it must be set to 1   because all processes need to interact with the kernel. (2 hours)
+
+	Bug 2: The inline assembly in init_paging() was enabling paging before enabling 4 MB sized pages.  Because our paging required 4MB pages, this was an issue. (1 hour)
+
+	Bug 3: Forgot to send EOI in our keyboard_handler().  No keypresses would register after the first. (1 hour)
+
+	Bug 4: Forgot to cli() in our exception handlers, which allows functionality when it shouldn't. (30 min)
+
+	Bug 5: Did not dump value in register C of RTC in our handle_rtc() function.  The RTC does not tick when the C register contains a trash value. (2 hours)
+
+	Bug 6: When enabling an IRQ on slave, we were not enabling the IRQ on master which slave connects to, so interrupts on slave would not be recieved. (1 hour)
+	
+~~~
+
+Checkpoint 2
+	
+	Bug 1: In vertical scrolling, we had our bounds for our for loop wrong.  This caused the last line in the terminal to be overwritten by the previous line. (30 min)
+
+	Bug 2: In fs_init() we were initializing the pointers incorrectly.  We were multiplying the incrementation by the size of the struct, but in C, that is done automatically, so we were actually incrementing the pointers by k*n^2 instead of k*n. (2 hours)
+
+	Bug 3: After printing a new line, backspace was not able to delete the first character in the buffer.  This was because we deleted an extra character from the keyboard buffer when deleting the newline character from the screen buffer.  This was fixed by setting a flag when deleting the newline character. (30 min)
+
+	Bug 4: We were returning the wrong number of bytes copied in edge cases for read_file().  This was causing a page fault. (1 hour)
+
+	Bug 5: When creating a temporary buffer to pass into our filesystem functions when testing them, we were not initializing the pointer correctly.  Passing in this faulty pointer caused a page fault.  This was solved by creating an object and then passing in its pointer instead of creating the pointer itself. (3 hours)
+
+	Bug 6: Our original ctrl+L function was clearing the buffer and the screen.  Upon RTDC we realized that the buffer must be maintained. (1 hour)
+
+~~~
+
+Checkpoint 3
+	Bug 1: We forgot to flush the tlb in our execute function so we got page faults. This took us 1 hour to fix.
+	
+	Bug 2: We were not saving the correct value of parent's kernel stack pointer. We fixed this by changing the context and then storing parent's kernel stack ptr. This took us 4 hrs to solve.
+
+	Bug 3: We did not forgot to reset the file counter in our read functions for directory so ls only worked once. This took us 2 hours to fix.
+
+~~~
+
+Checkpoint 4
+	Bug 1: In terminal_read(), was returning j instead of j + 1, so it was ignore the newline on the user side. (30 mins)
+
+	Bug 2: In dir_read(), we didn't check to see if the f_name[i] is NULL as an extra condition in the for loop, so cat . had a lot of extra null characters in the buffer. (30 mins)
+	
+	Bug 3: In dir_read(), we were returning nbytes instead of i which doesn't make sense since the function is supposed to return the number of bytes copied to buffer. (30 mins)
+
+	Bug 4: In read_data(), we had if data_idx > BLOCK_SIZE instead of data_idx >= BLOCK_SIZE which threw off program loading for files greater than a block_size and led to improper functionality
+		   in counter and fish. (3 days)
+
+	Bug 5: In parse(), we had difference in implementation choice for how args were parsed. cat------frame0.txt\n should work, but cat------frame0.txt----\n shouldn't.
+		   We chose former initially: ignoring trailing spaces instead of taking them into account (shouldn't allow more than 2 args). (15 mins)
+
+~~~
+
+Checkpoint 5
+	Bug 1: Exiting base shell logic was wrong since we didn't used logic based on the number of base shells, but rather the total_processes. This caused issues if programs
+		   ran in other shells and we tried to exit the base shell in another terminal. Fixed by adding a global variable for number of base shells. (4-6 hours)
+	
+	Bug 2: Faulty linked list logic, we tried to keep track of the tail which isn't necessary since we have direct access into processes array used the pid. Got rid of tail
+		   and rewrote add/remove functions more properly (3-4 days)
+
+	Bug 3: Association between a terminal and its processes were weak, so intially when we started 3 base shells, they were children of the first shell and not seperate base processes.
+		   Added a process pointer to terminal struct, and terminal pointer to process struct. (1 day)
+
+	Bug 4: Issues with lib.c modifying wrong variables. Fixed by creating background/foreground versions of putc, vert_scroll. (3-4 days)
+
+	Bug 5: Scheduling issues: forgot to change paging on every context switch which made programs like fish write onto other terminals. Fixed by updating paging on every context_switch. (1 day)
+	
+	Bug 6: Scheduling issues: ebp/esp values weren't saved at proper points causing the program to bootloop. We fixed that by saving and updating during the context_switch. (1-2 days)
