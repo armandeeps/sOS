@@ -1,9 +1,9 @@
 #include "schedule.h"
 #include "page.h"
 #include "lib.h"
-#include "keyboard.h"
-#include "syscalls.h"
-#include "rtc.h"
+#include "devices/keyboard.h"
+#include "interrupts/syscalls.h"
+#include "devices/rtc.h"
 
 static uint8_t colors[MAX_TERMINALS] = {WHITE, CYAN, GREEN};
 

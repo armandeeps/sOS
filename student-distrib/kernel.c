@@ -5,17 +5,18 @@
 #include "multiboot.h"
 #include "x86_desc.h"
 #include "lib.h"
-#include "i8259.h"
+#include "devices/i8259.h"
 #include "debug.h"
 #include "tests.h"
-#include "keyboard.h"
-#include "interrupt_handler.h"
-#include "rtc.h"
+#include "devices/keyboard.h"
+#include "interrupts/interrupt_handler.h"
+#include "devices/rtc.h"
 #include "page.h"
 #include "filesystem.h"
-#include "syscalls.h"
+#include "interrupts/syscalls.h"
 #include "terminal.h"
-#include "schedule.h"
+#include "devices/PIT.h"
+#include "devices/mouse.h"
 
 #define RUN_TESTS
 
@@ -149,10 +150,12 @@ void entry(unsigned long magic, unsigned long addr) {
     i8259_init();     /* Init the PIC         */
     init_fs();        /* Init the Filesystem  */
     init_paging();    /* Init Paging          */
+    init_mouse();
     init_keyboard();  /* Init the keyboard    */
     init_terminals(); /* Init the 3 terminals */
     init_rtc();       /* Init the RTC         */
     init_PIT();
+    
 
     sti(); 
     /* Initialize devices, memory, filesystem, enable device interrupts on the

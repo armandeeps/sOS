@@ -3,17 +3,7 @@
 
 #include "terminal.h"
 #include "types.h"
-#include "syscalls.h"
-
-#define PIT_IRQ 0
-#define PIT_CMD_PORT 0x43
-#define PIT_DATA_0 0x40
-#define PIT_ICW0 0x36
-#define DESIRED_FREQ 100
-#define NATURAL_FREQ 1193182
-#define MAX_PROCESSES 6
-#define LOWER_MASK 0x00FF
-#define UPPER_MASK 0xFF00
+#include "interrupts/syscalls.h"
 
 typedef struct process_t {
 	struct terminal_t * terminal; /* Every process is tied to a terminal, allows for lib.c/keyboard.c/terminal.c to work properly */
@@ -34,9 +24,5 @@ int add_process(process_t* p);
 int remove_process(process_t *p);
 int start_process(process_t* p);
 void context_switch(process_t * next_process); 
-
-/* PIT functions */
-extern void init_PIT();
-extern void pit_handler();
 
 #endif

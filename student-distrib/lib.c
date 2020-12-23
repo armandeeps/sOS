@@ -2,7 +2,7 @@
  * vim:ts=4 noexpandtab */
 
 #include "lib.h"
-#include "keyboard.h"
+#include "devices/keyboard.h"
 #include "schedule.h"
 
 static int screen_x;
