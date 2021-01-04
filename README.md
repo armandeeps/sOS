@@ -1,3 +1,7 @@
+This repository contains a Linux-like operating system, sOS, designed for x86 Processors.  Developed originally as an assignment for ECE391 - Computer Systems Engineering at the University of Illinois.
+
+Please adhere strictly to the academic integrity policies listed below as well as the legal policies listed below.
+
 ACADEMIC INTEGRITY
 -----
 Please review the University of Illinois Student Code before starting,
