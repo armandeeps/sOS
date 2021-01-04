@@ -90,9 +90,9 @@ int start_terminal(uint8_t tid) {
         :
         :"r"(terminals[tid].flags)
     );
-    if(total_processes < MAX_TERMINALS){
+    // if(total_processes < MAX_TERMINALS){
         context_switch(terminals[tid].active);
-    }
+    // }
     return 0;
 }
 

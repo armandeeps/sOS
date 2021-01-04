@@ -4,6 +4,7 @@
 #include "lib.h"
 #include "devices/keyboard.h"
 #include "schedule.h"
+#include "devices/mouse.h"
 
 static int screen_x;
 static int screen_y;
@@ -654,6 +655,9 @@ void update_cursor() {
     outb((uint8_t) (pos & 0xFF), 0x3D5); 
     outb(0x0E, 0x3D4);
     outb((uint8_t) ((pos>>8) & 0xFF), 0x3D5);
+
+    int32_t loc = NUM_COLS * mouse_display_y + mouse_display_x;
+    *(uint8_t *)(video_mem + (loc << 1) + 1) = (ATTRIB & 0x0F | 0xC0);
 }
 
 /* vert_scroll()

@@ -150,9 +150,10 @@ void entry(unsigned long magic, unsigned long addr) {
     i8259_init();     /* Init the PIC         */
     init_fs();        /* Init the Filesystem  */
     init_paging();    /* Init Paging          */
-    init_mouse();
+    
     init_keyboard();  /* Init the keyboard    */
     init_terminals(); /* Init the 3 terminals */
+    init_mouse();
     init_rtc();       /* Init the RTC         */
     init_PIT();
     

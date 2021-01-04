@@ -20,4 +20,10 @@ void write_mouse(uint8_t in);
 void wait_mouse_read();
 void wait_mouse_write();
 
+int mouse_x;
+int mouse_y;
+int mouse_display_x;
+int mouse_display_y;
+uint8_t * last_vmem;
+
 #endif
