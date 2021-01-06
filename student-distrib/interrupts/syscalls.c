@@ -660,3 +660,16 @@ void parse(const uint8_t * buf, uint8_t * buf2, int i, int length) {
         buf2[copy_idx] = '\0';
     }
 }
+
+void *mmap(void *addr, int32_t length, int32_t prot, int32_t flags, int32_t fd, int32_t offset) {
+    int i;
+    for(i = 0; i < PDE_SIZE; i++) {
+        if (i != USR_VIDEO_PDE && (Page_Directory[i] & PRESENT == 0)) {
+            /* Found a free page, mark it as present/user/4MB and return the page */
+            Page_Directory[i] |= PRESENT;
+            Page_Directory[i] |= User_SUP; 
+            Page_Directory[i] |= PS; 
+            return (void *) (Page_Directory[i] & 0xFFFFF000); 
+        }
+    }
+}

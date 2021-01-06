@@ -40,5 +40,5 @@ INVALID:
     iret
 
 sys_call_table:
-    .long 0, halt, execute, read, write, open, close, getargs, vidmap
+    .long 0, halt, execute, read, write, open, close, getargs, vidmap, mmap
 

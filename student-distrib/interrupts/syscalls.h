@@ -61,6 +61,7 @@ extern int32_t getargs (uint8_t* buf, int32_t nbytes);
 extern int32_t exec_halt(uint32_t status);
 extern int32_t close (int32_t fd);
 extern int32_t vidmap (uint8_t** screen_start);
+extern void *mmap(void *, uint32_t, int32_t, int32_t, int32_t, int32_t); 
 
 /* System call helpers */
 PCB * createPCB();
