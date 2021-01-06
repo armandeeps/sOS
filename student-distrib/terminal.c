@@ -4,6 +4,7 @@
 #include "devices/keyboard.h"
 #include "interrupts/syscalls.h"
 #include "devices/rtc.h"
+#include "devices/mouse.h"
 
 static uint8_t colors[MAX_TERMINALS] = {WHITE, CYAN, GREEN};
 
@@ -68,6 +69,14 @@ int start_terminal(uint8_t tid) {
     /* Copy the video memory of buffer we're switching into to the visible video memory location */
     memcpy((uint8_t *)VIDEO_MEMORY_START, (const uint8_t *)terminals[tid].vmem, _4KB);
     
+    int i;
+    for(i = 0; i < NUM_COLS*NUM_ROWS; i++)
+    {
+        *(uint8_t *)(VIDEO_MEMORY_START + (i << 1) + 1) = ATTRIB;
+    }
+    int loc = NUM_COLS * mouse_display_y + mouse_display_x;
+    *(uint8_t *)(VIDEO_MEMORY_START + (loc << 1) + 1) = (ATTRIB & 0x0F | 0xC0);
+
     /* Update the paging and flush the TLB afterwards */
     Page_Directory[USR_VIDEO_PDE] = (uint32_t)Page_Table | PRESENT | R_W | User_SUP;
     /* If the current process is the displayed terminals, map to physical video mem */
@@ -90,9 +99,9 @@ int start_terminal(uint8_t tid) {
         :
         :"r"(terminals[tid].flags)
     );
-    // if(total_processes < MAX_TERMINALS){
+    if(total_processes < MAX_TERMINALS){
         context_switch(terminals[tid].active);
-    // }
+    }
     return 0;
 }
 
@@ -136,8 +145,12 @@ void save_terminal_state() {
         "popl %0;"
         :"=r"(terminals[curr_tid].flags)
     );
+
     /* Copy current displayed video_mem into terminal's memory buffer */
     memcpy((uint8_t *)vaddr, (const uint8_t*)VIDEO_MEMORY_START, _4KB);
+    
+
+
 }
 
 /* swap_terminals()

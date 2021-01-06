@@ -40,19 +40,19 @@ void init_PIT() {
 void pit_handler() {
     send_eoi(PIT_IRQ);
     /* start 3 base shells */
-    // switch(total_processes) {
-    //     case 0:
-    //         start_terminal(TERM0);
-    //         return;
-    //     case 1:
-    //         swap_terminals(TERM1);
-    //         return; 
-    //     case 2:
-    //         swap_terminals(TERM2);
-    //         return; 
-    //     default:
-    //         break;
-    // }
-    // /* always perform a context switch to next process after the base shells have started */
-    // context_switch(current_process->next); 
+    switch(total_processes) {
+        case 0:
+            start_terminal(TERM0);
+            return;
+        case 1:
+            swap_terminals(TERM1);
+            return; 
+        case 2:
+            swap_terminals(TERM2);
+            return; 
+        default:
+            break;
+    }
+    /* always perform a context switch to next process after the base shells have started */
+    context_switch(current_process->next); 
 }
